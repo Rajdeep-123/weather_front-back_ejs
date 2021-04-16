@@ -18,7 +18,7 @@ app.get("/", (req, res) => {
 app.post("/", function (req, res) {
 
     const name = req.body.cityName;
-    const url = `https://api.openweathermap.org/data/2.5/weather?q=${name}&units=metric&APPID=f1ebab0d740525d33b8bef7132298543`;
+    const url = `https://api.openweathermap.org/data/2.5/weather?q=${name}&units=metric&APPID={YOUR API KEY}`;
     // API calling
     https.get(url, function (response) {
         response.on('data', function (d) {
@@ -34,11 +34,7 @@ app.post("/", function (req, res) {
             console.log(sunrise);
 
             const icon_url = `https://openweathermap.org/img/wn/${icon}@2x.png`;
-           // console.log(temp);
-          //  console.log(description);
-           // console.log(max_temp);
-           // console.log(min_temp);
-            //console.log(weatherData);
+        
 
             res.render("weather", {
                 temprature: temp,
@@ -73,7 +69,7 @@ app.post("/ajax",(req,res)=>{
     console.log("Sucess!");
     console.log(myLatitude+" "+myLongitude);
 
-    const url = `https://api.openweathermap.org/data/2.5/weather?lat=${myLatitude}&lon=${myLongitude}&units=metric&appid=f1ebab0d740525d33b8bef7132298543`;
+    const url = `https://api.openweathermap.org/data/2.5/weather?lat=${myLatitude}&lon=${myLongitude}&units=metric&appid={YOUR API KEY}`;
     https.get(url, function (response) {
         response.on('data', function (d) {
             const weatherData = JSON.parse(d);
