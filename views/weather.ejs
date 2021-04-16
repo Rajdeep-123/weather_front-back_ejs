@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+
+</head>
+
+<body>
+    <div class="main_div">
+        <div class="top">
+
+            <div class="first">
+                <img class="logo" src="<%= logo %>" alt="icon">
+
+
+            </div>
+            <div class="temp">
+                <div class="desc">
+                    <p>
+                        <span class="cityInfo">
+                            <%= city %>,<%= country%>
+                        </span><a class="btn" href="/">(Change city)</a><button class="locationbtn"
+                            onclick="myLocation()">
+                            (By location)
+                        </button>
+                    </p>
+
+                    <p class="des">
+                        <%=des %>
+                    </p>
+                </div>
+                <h1 class="mainTemp">
+                    <%= temprature %> °C
+                </h1>
+            </div>
+        </div>
+
+
+        <div class="tempSide">
+
+            <div class="max-temp">
+                <p>Max:<%= maximumT %> °C
+                </p>
+            </div>
+            <div class="min-temp">
+                <p>Min:<%= minimumT %> °C
+                </p>
+            </div>
+        </div>
+
+        <div class="tempSide">
+
+
+            <div id="current">
+
+            </div>
+
+            <div id="month">
+
+            </div>
+        </div>
+        <div id="demo">
+
+        </div>
+
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+
+        function myLocation() {
+
+
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition);
+
+            } else {
+                x.innerHTML = "Geolocation is not supported by this browser.";
+            }
+
+
+            function showPosition(position) {
+                const lati = position.coords.latitude;
+                const long = position.coords.longitude
+                console.log(`Lat is ${lati} and long is ${long}`);
+
+                const xhttp = new XMLHttpRequest();
+                xhttp.open("POST", "http://localhost:4000/ajax", true);
+                xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+                xhttp.onload = function () {
+                    console.log(this.responseText);
+                    const responseData = JSON.parse(this.responseText);
+                    console.log(responseData);
+
+                    $(".logo").attr("src", responseData.myIcon);
+                    $(".cityInfo").text(responseData.cityName + "," + responseData.countryName);
+                    $(".des").text(responseData.wDescription);
+                    $(".mainTemp").text(responseData.temprature + "°C");
+                    $(".max-temp").text("Max "+responseData.maximum_temp + "°C");
+                    $(".min-temp").text("Min "+responseData.minimum_temp + "°C");
+                }
+
+                xhttp.send(`latitude=${lati}&longitude=${long}`);
+                $(".locationbtn").remove();
+
+
+            }
+
+
+
+        }
+
+
+        setInterval(() => {
+            let time = new Date();
+
+            var zone;
+            function addZero(i) {
+                if (i < 10) {
+
+
+                    i = "0" + i;
+
+                }
+                return i;
+            }
+
+            let hour = time.getHours();
+
+
+            if (hour >= 12) {
+                zone = "PM";
+                if (hour == 12) {
+                    hour = hour
+                }
+                else {
+                    hour = hour - 12
+                }
+
+            }
+            else {
+                zone = "AM";
+            }
+
+            let minute = time.getMinutes();
+
+
+            let date = time.getDate();
+            let day = time.getDay();
+
+            let getDay = [
+                "SUN",
+                "MON",
+                "TUE",
+                "WED",
+                "THU",
+                "FRI",
+                "SAT",
+
+            ];
+
+            document.getElementById("month").innerHTML = getDay[day] + "/" + date
+
+            let finalString = addZero(hour) + ":" + addZero(minute) + " " + zone;
+
+            document.getElementById("current").innerHTML = finalString;
+
+        }, 1000);
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </script>
+</body>
+
+</html>
